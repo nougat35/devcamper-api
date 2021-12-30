@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const CourseSchema = new mongoose.Schema({
     title: {
@@ -20,9 +20,9 @@ const CourseSchema = new mongoose.Schema({
     },
     bootcamp: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Bootcamp',
+        ref: "Bootcamp",
         required: true,
     },
 });
 
-module.exports = mongoose.model('Course', CourseSchema);
+module.exports = mongoose.model("Course", CourseSchema);

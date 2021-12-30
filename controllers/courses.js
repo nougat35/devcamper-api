@@ -2,11 +2,16 @@ const asyncHandler = require('../middleware/asyncHandler');
 const Course = require('../models/Course');
 
 exports.getCourses = asyncHandler(async (req, res, next) => {
-    const courses = await Course.find(req.query);
+    const courses = req.params.bootcampId
+        ? await Course.find({ bootcamp: req.params.bootcampId })
+        : await Course.find().populate({
+              path: 'bootcamp',
+              select: 'name',
+          });
 
     res.status(200).json({
         success: true,
-        count: await Course.count(),
+        count: courses.length,
         data: courses,
     });
 });
@@ -27,19 +32,19 @@ exports.getCourse = asyncHandler(async (req, res, next) => {
 exports.createCourse = asyncHandler(async (req, res, next) => {
     //TODO
     res.status(200).json({
-        data: 'todo',
+        data: 'TODO',
     });
 });
 
 exports.updateCourse = asyncHandler(async (req, res, next) => {
     //TODO
     res.status(200).json({
-        data: 'todo',
+        data: 'TODO',
     });
 });
 exports.deleteCourse = asyncHandler(async (req, res, next) => {
     //TODO
     res.status(200).json({
-        data: 'todo',
+        data: 'TODO',
     });
 });
