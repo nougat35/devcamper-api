@@ -97,22 +97,24 @@ exports.uploadPhotoBootcamp = asyncHandler(async (req, res, next) => {
         });
     }
 
+    const newPhotoName = `bootcamp_${bootcamp.id}${path.parse(photo.name).ext}`;
+
     const movePath = path.join(
         __dirname,
         '..',
         process.env.FILE_UPLOAD_PATH,
-        `photo_${bootcamp.id}${path.parse(photo.name).ext}`
+        newPhotoName
     );
-
-    console.log(movePath);
 
     photo.mv(movePath, function (err) {
         if (err) {
             return res.status(500);
         }
-        res.status(200).json({
-            success: true,
-            message: req.params.id,
-        });
+    });
+
+    await Bootcamp.findByIdAndUpdate(req.params.id, { photo: newPhotoName });
+
+    res.status(200).json({
+        success: true,
     });
 });
