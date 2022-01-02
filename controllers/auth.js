@@ -44,7 +44,7 @@ exports.loginUser = asyncHandler(async (req, res, next) => {
     res.sendStatus(401);
 });
 
-exports.whoAmi = asyncHandler(async function (req, res, next) {
+exports.getMe = asyncHandler(async function (req, res, next) {
     const user = await User.findById(req.user.id);
 
     return res.status(200).json({

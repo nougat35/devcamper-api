@@ -26,3 +26,12 @@ exports.protect = asyncHandler(async function (req, res, next) {
         }
     );
 });
+
+exports.authorize = function (roles) {
+    return function (req, res, next) {
+        if (!roles.includes(req.user.role)) {
+            return res.sendStatus(401);
+        }
+        next();
+    };
+};
