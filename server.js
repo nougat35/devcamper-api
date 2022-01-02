@@ -7,6 +7,7 @@ const bootcamps = require('./routes/bootcamps');
 const courses = require('./routes/courses');
 const auth = require('./routes/auth');
 const fileUpload = require('express-fileupload');
+const cookieParser = require('cookie-parser');
 
 dotenv.config({ path: './config/config.env' });
 
@@ -16,6 +17,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(fileUpload());
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(morgan('dev'));
 app.use('/api/v1/bootcamps', bootcamps);

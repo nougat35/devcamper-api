@@ -1,5 +1,6 @@
 const express = require('express');
 const courses = require('./courses');
+const { protect } = require('../middleware/auth');
 
 const router = express.Router();
 const {
@@ -13,14 +14,14 @@ const {
 
 router.use('/:bootcampId/courses', courses);
 
-router.route('/').get(getBootcamps).post(createBootcamp);
+router.route('/').get(getBootcamps).post(protect, createBootcamp);
 
 router
     .route('/:id')
     .get(getBootcamp)
-    .put(updateBootcamp)
-    .delete(deleteBootcamp);
+    .put(protect, updateBootcamp)
+    .delete(protect, deleteBootcamp);
 
-router.route('/:id/photo').put(uploadPhotoBootcamp);
+router.route('/:id/photo').put(protect, uploadPhotoBootcamp);
 
 module.exports = router;

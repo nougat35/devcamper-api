@@ -43,8 +43,4 @@ UserSchema.methods.getSignedJWT = function () {
     });
 };
 
-UserSchema.methods.matchPassword = async function (plaintextPassword) {
-    return await bcrypt.compare(plaintextPassword, this.password);
-};
-
 module.exports = mongoose.model('User', UserSchema);
