@@ -52,3 +52,40 @@ exports.getMe = asyncHandler(async function (req, res, next) {
         user,
     });
 });
+
+exports.forgotPassword = asyncHandler(async function (req, res, next) {
+    const user = await User.findOne({ email: req.body.email });
+
+    if (!user) {
+        return res.status(404).json({
+            success: false,
+        });
+    }
+
+    const resetToken = await user.generateResetPasswordToken();
+
+    res.status(200).json({
+        success: true,
+        resetToken,
+    });
+});
+
+exports.resetPassword = asyncHandler(async function (req, res, next) {
+    const user = await User.findOne({
+        resetPasswordToken: req.query['reset-token'].toString(),
+    });
+
+    const isTokenExpired =
+        new Date(user.resetPasswordExpire).getTime() < Date.now();
+
+    if (!isTokenExpired) {
+        user.password = req.body.password;
+        user.resetPasswordExpire = Date.now();
+        await user.save();
+        return res.status(200).json({
+            success: true,
+        });
+    }
+
+    res.sendStatus(403);
+});

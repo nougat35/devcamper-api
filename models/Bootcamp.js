@@ -52,14 +52,6 @@ const BootcampSchema = new mongoose.Schema(
             ],
             required: true,
         },
-        averageRating: {
-            type: Number,
-            min: 1,
-            max: 10,
-        },
-        averageCost: {
-            type: Number,
-        },
         photo: {
             type: String,
             default: 'no-photo.jpg',
@@ -67,6 +59,11 @@ const BootcampSchema = new mongoose.Schema(
         createdAt: {
             type: Date,
             default: Date.now(),
+        },
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
         },
     },
     {

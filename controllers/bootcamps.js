@@ -1,8 +1,6 @@
 const path = require('path');
-const fs = require('fs');
 const Bootcamp = require('../models/Bootcamp');
 const asyncHandler = require('../middleware/asyncHandler');
-const asynchandler = require('../middleware/asyncHandler');
 
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
     const bootcamps = await Bootcamp.find(req.query).populate('courses');
@@ -27,6 +25,14 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
 });
 
 exports.createBootcamp = asyncHandler(async (req, res, next) => {
+    const userId = req.user.id;
+    req.body.user = userId;
+
+    const publishedBootcamp = await Bootcamp.findOne({ user: userId });
+    if (publishedBootcamp) {
+        return res.sendStatus(400);
+    }
+
     const bootcamp = await Bootcamp.create(req.body);
 
     res.status(201).json({
@@ -36,10 +42,11 @@ exports.createBootcamp = asyncHandler(async (req, res, next) => {
 });
 
 exports.updateBootcamp = asyncHandler(async (req, res, next) => {
-    const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true,
-    });
+    const bootcamp = await Bootcamp.findById(req.params.id);
+
+    if (bootcamp.user.toString() !== req.user.id.toString()) {
+        return res.sendStatus(401);
+    }
 
     if (!bootcamp) {
         return res.status(400).json({
@@ -48,11 +55,17 @@ exports.updateBootcamp = asyncHandler(async (req, res, next) => {
         });
     }
 
-    res.status(200).json({ success: true, data: bootcamp });
+    await Bootcamp.findByIdAndUpdate(req.params.id, req.body);
+
+    res.status(200).json({ success: true });
 });
 
 exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
     const bootcamp = await Bootcamp.findById(req.params.id);
+
+    if (bootcamp.user.toString() !== req.user.id.toString()) {
+        return res.sendStatus(401);
+    }
 
     if (!bootcamp) {
         return res.status(400).json({
@@ -68,6 +81,11 @@ exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
 
 exports.uploadPhotoBootcamp = asyncHandler(async (req, res, next) => {
     const bootcamp = await Bootcamp.findById(req.params.id);
+
+    if (bootcamp.user.toString() !== req.user.id.toString()) {
+        return res.sendStatus(401);
+    }
+
     if (!bootcamp) {
         return res.status(404).json({
             success: false,

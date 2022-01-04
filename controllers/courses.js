@@ -1,5 +1,6 @@
 const asyncHandler = require('../middleware/asyncHandler');
 const Course = require('../models/Course');
+const Bootcamp = require('../models/Bootcamp');
 
 exports.getCourses = asyncHandler(async (req, res, next) => {
     const courses = req.params.bootcampId
@@ -31,6 +32,16 @@ exports.getCourse = asyncHandler(async (req, res, next) => {
 
 exports.createCourse = asyncHandler(async (req, res, next) => {
     //TODO
+    const bootcamp = await Bootcamp.findById(req.body.bootcamp);
+
+    if (!bootcamp) {
+        res.sendStatus(403);
+    }
+
+    if (req.user.toString() !== bootcamp.user.toString()) {
+        return res.sendStatus(401);
+    }
+
     res.status(200).json({
         data: 'TODO',
     });
