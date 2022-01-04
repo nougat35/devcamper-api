@@ -47,9 +47,11 @@ UserSchema.methods.getSignedJWT = function () {
 };
 
 UserSchema.methods.generateResetPasswordToken = async function () {
+    const plaintextToken = crypto.randomBytes(20).toString('hex');
+
     const resetToken = crypto
         .createHash('SHA256')
-        .update(crypto.randomBytes(20).toString('hex'))
+        .update(plaintextToken)
         .digest('hex');
 
     this.resetPasswordToken = resetToken;
@@ -57,7 +59,7 @@ UserSchema.methods.generateResetPasswordToken = async function () {
 
     await this.save();
 
-    return resetToken;
+    return plaintextToken;
 };
 
 module.exports = mongoose.model('User', UserSchema);

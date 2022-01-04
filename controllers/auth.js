@@ -1,6 +1,7 @@
 const asyncHandler = require('../middleware/asyncHandler');
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 const dotenv = require('dotenv');
 
@@ -71,8 +72,11 @@ exports.forgotPassword = asyncHandler(async function (req, res, next) {
 });
 
 exports.resetPassword = asyncHandler(async function (req, res, next) {
+    const token = req.query['token'].toString();
+    const hashedToken = crypto.createHash('SHA256').update(token).digest('hex');
+
     const user = await User.findOne({
-        resetPasswordToken: req.query['reset-token'].toString(),
+        resetPasswordToken: hashedToken,
     });
 
     const isTokenExpired =
@@ -80,7 +84,8 @@ exports.resetPassword = asyncHandler(async function (req, res, next) {
 
     if (!isTokenExpired) {
         user.password = req.body.password;
-        user.resetPasswordExpire = Date.now();
+        user.resetPasswordExpire = undefined;
+        user.resetPasswordToken = undefined;
         await user.save();
         return res.status(200).json({
             success: true,
