@@ -7,7 +7,7 @@ const dotenv = require('dotenv');
 
 dotenv.config({ path: '../config/config.env' });
 
-exports.registerUser = asyncHandler(async (req, res, next) => {
+exports.register = asyncHandler(async (req, res, next) => {
     const { name, email, password, role } = req.body;
 
     await User.create({ name, email, password, role });
@@ -17,7 +17,7 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
     });
 });
 
-exports.loginUser = asyncHandler(async (req, res, next) => {
+exports.login = asyncHandler(async (req, res, next) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email: email }).select('email password');
@@ -43,6 +43,17 @@ exports.loginUser = asyncHandler(async (req, res, next) => {
     }
 
     res.sendStatus(401);
+});
+
+exports.logout = asyncHandler(async function (req, res, next) {
+    res.status(200)
+        .cookie('token', '', {
+            httpOnly: true,
+            expire: Date.now(0),
+        })
+        .json({
+            success: true,
+        });
 });
 
 exports.getMe = asyncHandler(async function (req, res, next) {
