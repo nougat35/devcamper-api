@@ -2,7 +2,7 @@ const asyncHandler = require('../middleware/asyncHandler');
 const Course = require('../models/Course');
 const Bootcamp = require('../models/Bootcamp');
 
-exports.getCourses = asyncHandler(async (req, res, next) => {
+exports.getCourses = asyncHandler(async (req, res) => {
     const courses = req.params.bootcampId
         ? await Course.find({ bootcamp: req.params.bootcampId })
         : await Course.find().populate({
@@ -17,7 +17,7 @@ exports.getCourses = asyncHandler(async (req, res, next) => {
     });
 });
 
-exports.getCourse = asyncHandler(async (req, res, next) => {
+exports.getCourse = asyncHandler(async (req, res) => {
     const course = await Course.findById(req.params.id);
 
     if (!course) {
@@ -30,7 +30,7 @@ exports.getCourse = asyncHandler(async (req, res, next) => {
     res.status(200).json(course);
 });
 
-exports.createCourse = asyncHandler(async (req, res, next) => {
+exports.createCourse = asyncHandler(async (req, res) => {
     //TODO
     const bootcamp = await Bootcamp.findById(req.body.bootcamp);
 
@@ -47,13 +47,13 @@ exports.createCourse = asyncHandler(async (req, res, next) => {
     });
 });
 
-exports.updateCourse = asyncHandler(async (req, res, next) => {
+exports.updateCourse = asyncHandler(async (req, res) => {
     //TODO
     res.status(200).json({
         data: 'TODO',
     });
 });
-exports.deleteCourse = asyncHandler(async (req, res, next) => {
+exports.deleteCourse = asyncHandler(async (req, res) => {
     //TODO
     res.status(200).json({
         data: 'TODO',

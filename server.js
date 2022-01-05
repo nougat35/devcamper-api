@@ -10,6 +10,7 @@ const fileUpload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const hpp = require('hpp');
+const cors = require('cors');
 
 dotenv.config({ path: './config/config.env' });
 
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(morgan('dev'));
 app.use(helmet());
 app.use(hpp());
+app.use(cors());
 
 app.use('/api/v1/bootcamps', bootcamps);
 app.use('/api/v1/courses', courses);

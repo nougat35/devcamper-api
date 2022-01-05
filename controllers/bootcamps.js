@@ -2,7 +2,7 @@ const path = require('path');
 const Bootcamp = require('../models/Bootcamp');
 const asyncHandler = require('../middleware/asyncHandler');
 
-exports.getBootcamps = asyncHandler(async (req, res, next) => {
+exports.getBootcamps = asyncHandler(async (req, res) => {
     const bootcamps = await Bootcamp.find(req.query).populate('courses');
 
     res.status(200).json({
@@ -12,7 +12,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
     });
 });
 
-exports.getBootcamp = asyncHandler(async (req, res, next) => {
+exports.getBootcamp = asyncHandler(async (req, res) => {
     const bootcamp = await Bootcamp.findById(req.params.id);
 
     if (!bootcamp) {
@@ -24,7 +24,7 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
     res.status(200).json({ success: true, data: bootcamp });
 });
 
-exports.createBootcamp = asyncHandler(async (req, res, next) => {
+exports.createBootcamp = asyncHandler(async (req, res) => {
     const userId = req.user.id;
     req.body.user = userId;
 
@@ -41,7 +41,7 @@ exports.createBootcamp = asyncHandler(async (req, res, next) => {
     });
 });
 
-exports.updateBootcamp = asyncHandler(async (req, res, next) => {
+exports.updateBootcamp = asyncHandler(async (req, res) => {
     const bootcamp = await Bootcamp.findById(req.params.id);
 
     if (bootcamp.user.toString() !== req.user.id.toString()) {
@@ -60,7 +60,7 @@ exports.updateBootcamp = asyncHandler(async (req, res, next) => {
     res.status(200).json({ success: true });
 });
 
-exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
+exports.deleteBootcamp = asyncHandler(async (req, res) => {
     const bootcamp = await Bootcamp.findById(req.params.id);
 
     if (bootcamp.user.toString() !== req.user.id.toString()) {
@@ -79,7 +79,7 @@ exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
     res.status(200).json({ success: true });
 });
 
-exports.uploadPhotoBootcamp = asyncHandler(async (req, res, next) => {
+exports.uploadPhotoBootcamp = asyncHandler(async (req, res) => {
     const bootcamp = await Bootcamp.findById(req.params.id);
 
     if (bootcamp.user.toString() !== req.user.id.toString()) {
