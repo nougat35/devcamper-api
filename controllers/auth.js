@@ -86,7 +86,9 @@ exports.resetPassword = asyncHandler(async function (req, res, next) {
         user.password = req.body.password;
         user.resetPasswordExpire = undefined;
         user.resetPasswordToken = undefined;
+
         await user.save();
+
         return res.status(200).json({
             success: true,
         });
